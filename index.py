@@ -26,7 +26,18 @@ def calcular_derivada(expressao):
 
         else: # Derivando componentes com variáveis
             numeros = elemento.split("x") # Separa a multiplicação do expoente
-            if numeros[1] == "" or numeros[1] == "^1": # Caso não tenha expoente ou seja igual a 1, retorna apenas o multiplicador
+            if "sin" in elemento:
+                if "^" in elemento:
+                    multiplicador = 1
+                    if "*" in numeros[0]:
+                        multiplicador = int(numeros[0].replace("*sin", ""))
+                    expoente = int(numeros[1].replace("^", ""))
+                    multiplicador = multiplicador*expoente
+                    resposta.append(f'{multiplicador}*x*consx^{expoente}')
+                else:
+                    resposta.append(elemento.replace("sin", "cos"))
+
+            elif numeros[1] == "" or numeros[1] == "^1": # Caso não tenha expoente ou seja igual a 1, retorna apenas o multiplicador
                 resposta.append(numeros[0].replace("*", ""))
             else:
                 multiplicador = int(numeros[0].replace("*", ""))
@@ -39,7 +50,7 @@ def calcular_derivada(expressao):
         
     return resposta
 
-expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x): ")
+expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + sinx^2): ")
 print("Entrada:")
 print(expressao)
 
