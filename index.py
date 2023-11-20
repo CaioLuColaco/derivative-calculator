@@ -5,7 +5,7 @@ def gerar_ascii_art(texto):
     ascii_art = f.renderText(texto)
     return ascii_art
 
-banner = gerar_ascii_art("Colaco Productions")
+banner = gerar_ascii_art("Derivative Calculator")
 print(banner)
 
 def calcular_derivada(expressao):
@@ -20,6 +20,9 @@ def calcular_derivada(expressao):
 
         elif not "x" in elemento: # Derivando numeros sem variaveis
             resposta.append("0")
+
+        elif "e^" in elemento: # Para elementos do tipo: e^x
+            resposta.append(elemento)
 
         else: # Derivando componentes com variáveis
             numeros = elemento.split("x") # Separa a multiplicação do expoente
@@ -36,7 +39,7 @@ def calcular_derivada(expressao):
         
     return resposta
 
-expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1): ")
+expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x): ")
 print("Entrada:")
 print(expressao)
 
