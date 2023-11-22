@@ -37,6 +37,26 @@ def calcular_derivada(expressao):
                 else:
                     resposta.append(elemento.replace("sin", "cos"))
 
+            elif "cos" in elemento:
+                if "^" in elemento:
+                    multiplicador = 1
+                    if "*" in numeros[0]:
+                        multiplicador = int(numeros[0].replace("*cos", ""))
+                    expoente = int(numeros[1].replace("^", ""))
+                    multiplicador = -multiplicador * expoente
+                    resposta.append(f'- {multiplicador*-1}*x*sinx^{expoente}') if multiplicador <= 0 else resposta.append(f'{multiplicador}*x*sinx^{expoente}')
+                else:
+                    resposta.append(elemento.replace("cos", "-sin"))
+            elif "tan" in elemento:
+                if "^" in elemento:
+                    multiplicador = 1
+                    if "*" in numeros[0]:
+                        multiplicador = int(numeros[0].replace("*tan", ""))
+                    expoente = int(numeros[1].replace("^", ""))
+                    multiplicador = multiplicador * (expoente + 1)
+                    resposta.append(f'{multiplicador}*x*tanx^{expoente}+1')
+                else:
+                    resposta.append(elemento.replace("tan", "secx^2"))
             elif numeros[1] == "" or numeros[1] == "^1": # Caso não tenha expoente ou seja igual a 1, retorna apenas o multiplicador
                 resposta.append(numeros[0].replace("*", ""))
             else:
@@ -47,14 +67,26 @@ def calcular_derivada(expressao):
                 expoente = expoente - 1
 
                 resposta.append(f'{multiplicador}*x^{expoente}' )
-        
-    return resposta
 
-expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + sinx^2): ")
+    respostaFormatada = ""
+    for item in resposta:
+        respostaFormatada += f'{item} '
+    if "- +" in respostaFormatada:
+        respostaFormatada = respostaFormatada.replace("- +", "-")
+    if "- -" in respostaFormatada:
+        respostaFormatada = respostaFormatada.replace("- -", "+")
+    if "+ -" in respostaFormatada:
+        respostaFormatada = respostaFormatada.replace("+ -", "-")
+    if "+ +" in respostaFormatada:
+        respostaFormatada = respostaFormatada.replace("+ +", "+")
+
+    return respostaFormatada
+
+expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2): ")
 print("Entrada:")
 print(expressao)
 
-print_result = lambda expressao: print(*calcular_derivada(expressao), sep=' ')
+print_result = lambda expressao: print(calcular_derivada(expressao))
 
 print("Resposta:")
 print_result(expressao)
