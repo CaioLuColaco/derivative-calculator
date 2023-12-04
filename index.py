@@ -143,6 +143,15 @@ def calcular_derivada(expressao):
 
     return respostaFormatada
 
+def maybe_bind(x, f): # MONAD
+    if x is "":
+        print("É necessário digitar uma entrada diferente de vazio...")
+    else:
+        return f(x)
+
+def maybe(x): # MONAD
+    return lambda f: maybe_bind(x, f)
+
 expressao = input("Insira a expressão para a qual deseja calcular a derivada. Exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2 + (x^2 + 2*x^3 + 3*x) * (2*x^2 - 4*x) + (x^2 + 2*x^3 + 3*x) / (2*x^2 - 4*x) : ")
 print("Entrada:")
 print(expressao)
@@ -150,4 +159,4 @@ print(expressao)
 print_result = lambda expressao: print(calculadora(expressao))
 
 print("Resposta:")
-print_result(expressao)
+maybe (expressao) (print_result) # MONAD
