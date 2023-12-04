@@ -6,15 +6,19 @@ ascii_art = lambda texto, font: Figlet(font=font).renderText(texto)
 banner = ascii_art("Derivative Calculator", 'slant')
 print(banner)
 
+
+# Currying: 
 def calculadora(expression):
+    def inner_calculadora(termsMult):
+        def inner_inner_calculadora(termsDiv):
+            def inner_inner_inner_calculadora(derivadasComuns):
+                return derivadasComuns + termsMult[1] + termsDiv[1]
 
-    termsMult = formatMultiplications(expression) # [expressão sem a multiplicação, expressão da multiplicação já derivada]
+            return inner_inner_inner_calculadora(calcular_derivada(termsDiv[0]))
 
-    termsDiv = formatDivisions(termsMult[0])
+        return inner_inner_calculadora(formatDivisions(termsMult[0]))
 
-    derivadasComuns = calcular_derivada(termsDiv[0])
-
-    return derivadasComuns + termsMult[1] + termsDiv[1]
+    return inner_calculadora(formatMultiplications(expression))
 
 def formatMultiplications(expression):
     multiplicatorPosition = expression.find(") * (")
