@@ -155,11 +155,17 @@ def maybe_bind(x, f): # MONAD
 def maybe(x): # MONAD
     return lambda f: maybe_bind(x, f)
 
-expressao = input("Insira a expressão para a qual deseja calcular a derivada. Exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2 + (x^2 + 2*x^3 + 3*x) * (2*x^2 - 4*x) + (x^2 + 2*x^3 + 3*x) / (2*x^2 - 4*x) : ")
-print("Entrada:")
-print(expressao)
+def iniciarCalculadora():
+    expressao = input("Insira a expressão para a qual deseja calcular a derivada. Exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2 + (x^2 + 2*x^3 + 3*x) * (2*x^2 - 4*x) + (x^2 + 2*x^3 + 3*x) / (2*x^2 - 4*x) : ")
+    print("Entrada:")
+    print(expressao)
 
-print_result = lambda expressao: print(calculadora(expressao))
+    print_result = lambda expressao: print(calculadora(expressao))
 
-print("Resposta:")
-maybe (expressao) (print_result) # MONAD
+    print("Resposta:")
+    maybe (expressao) (print_result) # MONAD
+
+# Função lambda recursiva:
+executarCalculadora = lambda: (iniciarCalculadora(), (executarCalculadora() if input("Deseja realizar o procedimento novamente? (sim/não): ").lower() == "sim" else None))[0] 
+
+executarCalculadora()
