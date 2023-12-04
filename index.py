@@ -1,4 +1,5 @@
 from pyfiglet import Figlet
+from functools import reduce
 
 ascii_art = lambda texto, font: Figlet(font=font).renderText(texto)
 
@@ -65,7 +66,7 @@ def formatDivisions(expression):
 
 def calcular_derivada(expressao):
 
-    strip_elements = lambda expressao: [elemento.strip() for elemento in expressao.split()]
+    strip_elements = lambda expressao: [elemento.strip() for elemento in expressao.split()] # List Comprehensio dentro de lambda
     # Dividir a string pelos espaços em branco e remover espaços no início e no final
     resposta = []
     componentes = strip_elements(expressao)
@@ -128,9 +129,8 @@ def calcular_derivada(expressao):
 
                 resposta.append(f'{multiplicador}*x^{expoente}' )
 
-    respostaFormatada = ""
-    for item in resposta:
-        respostaFormatada += f'{item} '
+    respostaFormatada = reduce(lambda acc, item: acc + f'{item} ', resposta, '')  # Uso do functore reduce
+
     if "- +" in respostaFormatada:
         respostaFormatada = respostaFormatada.replace("- +", "-")
     if "- -" in respostaFormatada:
