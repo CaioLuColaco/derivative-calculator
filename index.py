@@ -131,16 +131,16 @@ def calcular_derivada(expressao):
 
     respostaFormatada = reduce(lambda acc, item: acc + f'{item} ', resposta, '')  # Uso do functore reduce
 
-    if "- +" in respostaFormatada:
-        respostaFormatada = respostaFormatada.replace("- +", "-")
-    if "- -" in respostaFormatada:
-        respostaFormatada = respostaFormatada.replace("- -", "+")
-    if "+ -" in respostaFormatada:
-        respostaFormatada = respostaFormatada.replace("+ -", "-")
-    if "+ +" in respostaFormatada:
-        respostaFormatada = respostaFormatada.replace("+ +", "+")
+    replacements = {"- +": "-", "- -": "+", "+ -": "-", "+ +": "+"} # DICIONARIO
 
-    return respostaFormatada
+    # Dicionario dentro do escopo de uma função lambda
+    replace_patterns = lambda text: reduce(
+        lambda acc, pattern: acc.replace(pattern, replacements[pattern]),
+        replacements,
+        text,
+    )
+
+    return replace_patterns(respostaFormatada)
 
 def maybe_bind(x, f): # MONAD
     if x == "":
