@@ -1,11 +1,8 @@
 from pyfiglet import Figlet
 
-def gerar_ascii_art(texto):
-    f = Figlet(font='slant')  # Escolha uma fonte, 'slant' é apenas um exemplo
-    ascii_art = f.renderText(texto)
-    return ascii_art
+ascii_art = lambda texto, font: Figlet(font=font).renderText(texto)
 
-banner = gerar_ascii_art("Derivative Calculator")
+banner = ascii_art("Derivative Calculator", 'slant')
 print(banner)
 
 def calculadora(expression):
@@ -67,9 +64,11 @@ def formatDivisions(expression):
     
 
 def calcular_derivada(expressao):
+
+    strip_elements = lambda expressao: [elemento.strip() for elemento in expressao.split()]
     # Dividir a string pelos espaços em branco e remover espaços no início e no final
     resposta = []
-    componentes = [elemento.strip() for elemento in expressao.split()]
+    componentes = strip_elements(expressao)
 
     for elemento in componentes:
 
@@ -144,7 +143,7 @@ def calcular_derivada(expressao):
     return respostaFormatada
 
 def maybe_bind(x, f): # MONAD
-    if x is "":
+    if x == "":
         print("É necessário digitar uma entrada diferente de vazio...")
     else:
         return f(x)
