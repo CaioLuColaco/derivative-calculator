@@ -8,6 +8,32 @@ def gerar_ascii_art(texto):
 banner = gerar_ascii_art("Derivative Calculator")
 print(banner)
 
+def calculadora(expression):
+
+    terms = formatMultiplications(expression) # [expressão sem a multiplicação, expressão da multiplicação já derivada]
+
+    derivadasComuns = calcular_derivada(terms[0])
+
+    return derivadasComuns + terms[1]
+
+def formatMultiplications(expression):
+    multiplicatorPosition = expression.find(") * (")
+    if multiplicatorPosition != -1: # Verifica se existe pelo menos uma multiplicação na expressão
+        begin = expression.find("(")
+        final = expression.find(")", multiplicatorPosition + 1)
+
+        firstExpression = expression[begin + 1: multiplicatorPosition]
+        secondExpression = expression[multiplicatorPosition + 5 : final]
+
+        if begin > 1:
+            sinal = expression[begin - 2]
+            return [expression.replace(f'{sinal} ({firstExpression}) * ({secondExpression})', ""), f'{sinal} ({firstExpression}) * ({calcular_derivada(secondExpression)}) {sinal} ({calcular_derivada(firstExpression)}) * ({secondExpression})']
+
+        return [expression.replace(f'{sinal} ({firstExpression}) * ({secondExpression})', ""), f'+ ({firstExpression}) * ({calcular_derivada(secondExpression)}) + ({calcular_derivada(firstExpression)}) * ({secondExpression})']
+    
+    return [expression, ""]
+    
+
 def calcular_derivada(expressao):
     # Dividir a string pelos espaços em branco e remover espaços no início e no final
     resposta = []
@@ -60,7 +86,10 @@ def calcular_derivada(expressao):
             elif numeros[1] == "" or numeros[1] == "^1": # Caso não tenha expoente ou seja igual a 1, retorna apenas o multiplicador
                 resposta.append(numeros[0].replace("*", ""))
             else:
-                multiplicador = int(numeros[0].replace("*", ""))
+                if numeros[0] == "":
+                    multiplicador = 1
+                else:    
+                    multiplicador = int(numeros[0].replace("*", ""))
                 expoente = int(numeros[1].replace("^", ""))
 
                 multiplicador = multiplicador * expoente
@@ -82,14 +111,11 @@ def calcular_derivada(expressao):
 
     return respostaFormatada
 
-expressao = input("Insira a expressão para a qual deseja calcular a derivada (exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2): ")
+expressao = input("Insira a expressão para a qual deseja calcular a derivada. Exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2 + (x^2 + 2*x^3 + 3*x) * (2*x^2 - 4*x) : ")
 print("Entrada:")
 print(expressao)
 
-print_result = lambda expressao: print(calcular_derivada(expressao))
+print_result = lambda expressao: print(calculadora(expressao))
 
 print("Resposta:")
 print_result(expressao)
-
-# Trigonométricas
-# (x^2 + x^3 + x) * (x^2 + x)
