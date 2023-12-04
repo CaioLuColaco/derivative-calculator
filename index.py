@@ -10,11 +10,13 @@ print(banner)
 
 def calculadora(expression):
 
-    terms = formatMultiplications(expression) # [expressão sem a multiplicação, expressão da multiplicação já derivada]
+    termsMult = formatMultiplications(expression) # [expressão sem a multiplicação, expressão da multiplicação já derivada]
 
-    derivadasComuns = calcular_derivada(terms[0])
+    termsDiv = formatDivisions(termsMult[0])
 
-    return derivadasComuns + terms[1]
+    derivadasComuns = calcular_derivada(termsDiv[0])
+
+    return derivadasComuns + termsMult[1] + termsDiv[1]
 
 def formatMultiplications(expression):
     multiplicatorPosition = expression.find(") * (")
@@ -27,9 +29,39 @@ def formatMultiplications(expression):
 
         if begin > 1:
             sinal = expression[begin - 2]
-            return [expression.replace(f'{sinal} ({firstExpression}) * ({secondExpression})', ""), f'{sinal} ({firstExpression}) * ({calcular_derivada(secondExpression)}) {sinal} ({calcular_derivada(firstExpression)}) * ({secondExpression})']
+            return [
+                expression.replace(f'{sinal} ({firstExpression}) * ({secondExpression})', ""), 
+                f'{sinal} ({firstExpression}) * ({calcular_derivada(secondExpression)}) {sinal} ({calcular_derivada(firstExpression)}) * ({secondExpression}) '
+                ]
 
-        return [expression.replace(f'{sinal} ({firstExpression}) * ({secondExpression})', ""), f'+ ({firstExpression}) * ({calcular_derivada(secondExpression)}) + ({calcular_derivada(firstExpression)}) * ({secondExpression})']
+        return [expression.replace(
+            f'{sinal} ({firstExpression}) * ({secondExpression})', ""), 
+            f'+ ({firstExpression}) * ({calcular_derivada(secondExpression)}) + ({calcular_derivada(firstExpression)}) * ({secondExpression}) '
+            ]
+    
+    return [expression, ""]
+
+def formatDivisions(expression):
+    divisionPosition = expression.find(") / (")
+    if divisionPosition != -1: # Verifica se existe pelo menos uma multiplicação na expressão
+        begin = expression.find("(")
+        final = expression.find(")", divisionPosition + 1)
+
+        firstExpression = expression[begin + 1: divisionPosition]
+        secondExpression = expression[divisionPosition + 5 : final]
+
+        if begin > 1:
+            sinal = expression[begin - 2]
+
+            return [
+                expression.replace(f'{sinal} ({firstExpression}) / ({secondExpression})', ""), 
+                f'{sinal} (({firstExpression}) * ({calcular_derivada(secondExpression)}) - ({calcular_derivada(firstExpression)}) * ({secondExpression})) / ({secondExpression})^2'
+                ]
+
+        return [expression.replace(
+            f'{sinal} ({firstExpression}) / ({secondExpression})', ""), 
+            f'+ (({firstExpression}) * ({calcular_derivada(secondExpression)}) - ({calcular_derivada(firstExpression)}) * ({secondExpression})) / ({secondExpression})^2'
+            ]
     
     return [expression, ""]
     
@@ -111,7 +143,7 @@ def calcular_derivada(expressao):
 
     return respostaFormatada
 
-expressao = input("Insira a expressão para a qual deseja calcular a derivada. Exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2 + (x^2 + 2*x^3 + 3*x) * (2*x^2 - 4*x) : ")
+expressao = input("Insira a expressão para a qual deseja calcular a derivada. Exemplo: 2*x^3 - 4*x^2 + 7*x + 1 + e^x + 2*sinx^2 + 2*cosx^2 - 2*tanx^2 + (x^2 + 2*x^3 + 3*x) * (2*x^2 - 4*x) + (x^2 + 2*x^3 + 3*x) / (2*x^2 - 4*x) : ")
 print("Entrada:")
 print(expressao)
 
